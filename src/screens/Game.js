@@ -11,7 +11,7 @@ export default class Game extends Component {
         this.state = { 
             visibleBlob: Math.floor(Math.random() * 23+1),
             score: 0,
-            time: 5,
+            time: 60,
             record: 0,
             endGame: false,
             isVisible: false
