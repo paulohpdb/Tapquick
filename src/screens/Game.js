@@ -56,7 +56,7 @@ export default class Game extends Component {
     restart = () => {
         this.setState({endGame: false})
         this.setState({score: 0})
-        this.setState({time: 5})
+        this.setState({time: 60})
     }
 
 
