@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {View, Text, TouchableOpacity, FlatList} from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 import styles from '../styles/Style'
@@ -10,17 +11,30 @@ export default class Game extends Component {
         this.state = { 
             visibleBlob: Math.floor(Math.random() * 23+1),
             score: 0,
+            time: 5,
+            record: 0,
             endGame: false,
             isVisible: false
         }
     }
 
-    componentDidMount = () => {
-        setTimeout(this.endGame, 60000)
+    componentDidMount = async () => {
+        setInterval(this.endGame, 1000)
+        let record = await AsyncStorage.getItem('record')
+        record = JSON.parse(record)
+        this.setState({record: record})
     }
 
-    endGame = () => {
-        this.setState({endGame: true})
+    endGame = async () => {
+        if (this.state.time > 0) {
+            this.setState({time: this.state.time - 1})
+        } else {
+            this.setState({endGame: true})
+            if (this.state.score > this.state.record) {
+                this.setState({record: this.state.score})
+                await AsyncStorage.setItem('record', JSON.stringify(this.state.score))
+            }
+        }
     }
 
     newBlob = (id) => {
@@ -39,6 +53,12 @@ export default class Game extends Component {
        
     }
 
+    restart = () => {
+        this.setState({endGame: false})
+        this.setState({score: 0})
+        this.setState({time: 5})
+    }
+
 
     render() {
         if (this.state.endGame == false) {
@@ -47,7 +67,14 @@ export default class Game extends Component {
             <View>
 
                 <View style={styles.ui}>
-                    <Text>Score: {this.state.score}</Text>
+                    <View style={styles.uiScore}>
+                        <Text style={styles.textScore}>Score: {this.state.score}</Text>
+                    </View>
+
+                    <View style={styles.uiTime}>
+                        <Text style={styles.text}>Tempo restante: </Text>
+                        <Text style={styles.text}>{this.state.time} segundos</Text>
+                    </View>
                 </View>
 
                 <View  style={styles.container}>
@@ -148,15 +175,20 @@ export default class Game extends Component {
                 </TouchableOpacity>
 
                 </View>
-                
-                
                
             </View>
 
         ) } else {
             return (
-                <View>
-                    <Text>Sua pontuação: {this.state.score}</Text>
+                <View style={styles.container}>
+                    <View style={styles.resultEndGame}>
+                        <Text style={styles.textEndGame}>Sua pontuação</Text>
+                        <Text style={styles.textResult}>{this.state.score}</Text>
+                        <Text style={styles.textEndGame}>Recorde atual: {this.state.record}</Text>
+                        <TouchableOpacity onPress={() => this.restart()} style={styles.buttonPlayAgain}>
+                            <Text style={styles.textButton}>Jogar novamente</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             )
         }
