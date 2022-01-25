@@ -8,14 +8,19 @@ export default class Game extends Component {
     constructor() {
         super()
         this.state = { 
-            visibleBlob: 0,
+            visibleBlob: Math.floor(Math.random() * 23+1),
             score: 0,
+            endGame: false,
             isVisible: false
         }
     }
 
     componentDidMount = () => {
-        this.newBlob
+        setTimeout(this.endGame, 60000)
+    }
+
+    endGame = () => {
+        this.setState({endGame: true})
     }
 
     newBlob = (id) => {
@@ -23,20 +28,29 @@ export default class Game extends Component {
         if (this.state.visibleBlob == id) {
             this.setState({score: this.state.score + 1})
         } else {
-            this.setState({score: this.state.score - 1})
+            if (this.state.score >= 10) {
+                this.setState({score: this.state.score - 10})
+            } else {
+                this.setState({score: 0})
+            }
         }
-        
-        this.setState({visibleBlob: Math.floor(Math.random() * 24+1)})
+
+        this.setState({visibleBlob: Math.floor(Math.random() * 23+1)})
        
     }
 
 
     render() {
-        return (
-            <View style={styles.container}>
+        if (this.state.endGame == false) {
 
-                <Text>Score: {this.state.score}</Text>
-                
+        return (
+            <View>
+
+                <View style={styles.ui}>
+                    <Text>Score: {this.state.score}</Text>
+                </View>
+
+                <View  style={styles.container}>
                 <TouchableOpacity onPress={() => this.newBlob(0)} style={this.state.visibleBlob == 0 ? styles.blobVisible : styles.blobNotVisible}>
 
                 </TouchableOpacity>
@@ -132,9 +146,19 @@ export default class Game extends Component {
                 <TouchableOpacity onPress={() => this.newBlob(23)} style={this.state.visibleBlob == 23 ? styles.blobVisible : styles.blobNotVisible}>
 
                 </TouchableOpacity>
+
+                </View>
+                
+                
                
             </View>
 
-        )
+        ) } else {
+            return (
+                <View>
+                    <Text>Sua pontuação: {this.state.score}</Text>
+                </View>
+            )
+        }
     }
 }

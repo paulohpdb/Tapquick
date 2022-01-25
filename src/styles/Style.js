@@ -1,11 +1,13 @@
 import { StyleSheet, Dimensions} from 'react-native'
 
-const rows = 6;
-const cols = 4;
-const marginHorizontal = 4;
-const marginVertical = 4;
-const width = (Dimensions.get('window').width / cols) - (marginHorizontal * (cols + 1));
-const height = (Dimensions.get('window').height / rows) - (marginVertical * (rows + 1));
+
+const rows = 6
+const cols = 4
+const marginHorizontal = 0.8
+const marginVertical = 1.2
+const width = Dimensions.get('window').width / cols - (marginHorizontal * (cols + 1))
+const uiHeight = Dimensions.get('window').height/12
+const height = (Dimensions.get('window').height - uiHeight) / rows - (marginHorizontal * (rows + 1))
 
 
 const styles = StyleSheet.create({ 
@@ -15,13 +17,18 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#FFF'
+        backgroundColor: '#FFF',
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width
+    },
+    ui: {
+        height: uiHeight,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'green'
     },
     blobVisible: {
-        marginTop: marginVertical,
-        marginBottom: marginVertical,
-        marginLeft: marginHorizontal,
-        marginRight: marginHorizontal,
+        borderRadius: 5,
         width: width,
         height: height,
         justifyContent: 'center',
@@ -29,10 +36,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'gold',
     },
     blobNotVisible: {
-        marginTop: marginVertical,
-        marginBottom: marginVertical,
-        marginLeft: marginHorizontal,
-        marginRight: marginHorizontal,
+        borderRadius: 5,
         width: width,
         height: height,
         justifyContent: 'center',
